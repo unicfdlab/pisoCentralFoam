@@ -1,0 +1,13 @@
+The case is adaptation of the Fluent (r) tutorial turbo case for post-processing lessons. 
+That's why the mesh is coarse and without intake fairing.
+
+The original work was conducted by D. Eckardt, 1976.
+
+The experimental data:
+
+    20 blades
+    14000 rev/min
+    G=5.31 kg/s
+    PR03=2.17
+    eta03=94.8%
+

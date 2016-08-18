@@ -1,0 +1,125 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     3.1                                |
+|   \\  /    A nd           | Web:         http://www.extend-project.de       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      omega;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 -1 0 0 0 0];
+
+internalField   uniform 0.021;
+
+boundaryField
+{
+    wall-diffuser-hub
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-diffuser-shroud
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-inlet-hub
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-inlet-shroud
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-hub
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-shroud
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    wall-blade
+    {
+        type            compressible::omegaWallFunction;
+        refValue        uniform 0;
+        value           uniform 14.855;
+        U               Urel;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        beta1           0.075;
+    }
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 200;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.021;
+        value           uniform 0.021;
+    }
+    rotor_cyclic_lower
+    {
+        type            cyclicGgi;
+        value           uniform 0.021;
+    }
+    rotor_cyclic_upper
+    {
+        type            cyclicGgi;
+        value           uniform 0.021;
+    }
+}
+
+
+// ************************************************************************* //

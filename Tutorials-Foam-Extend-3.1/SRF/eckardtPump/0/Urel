@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      Urel;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        //type            pressureInletOutletVelocity;
+        //value           uniform (0 0 0);
+
+      	type            flowRateInletVelocity;
+        value           uniform (0 0 0); //flowRate is 0.42kg/s
+        rho		rho;
+        phi		phi;
+        flowRate	0.2655;
+
+/*        type            SRFVelocity;
+        inletValue      uniform (10 0 0);
+        relative        no;
+        value           uniform (0 0 0);*/
+    }
+    
+    outlet
+    {
+        type            zeroGradient;
+        value           uniform (0 0 0);
+	/*type            flowRateInletVelocity;
+        value           uniform (0 0 0); 
+        rho		rho;
+        phi		phi;
+        flowRate	-0.2655;*/
+    }
+    
+    "(wall-diffuser-hub|wall-inlet-hub|wall-hub|wall-blade)"
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    
+    "(wall-diffuser-shroud|wall-inlet-shroud|wall-shroud)"
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+
+    "(rotor_cyclic_upper|rotor_cyclic_lower)"
+    {
+        type            cyclicGgi;
+    }
+
+}
+
+
+// ************************************************************************* //

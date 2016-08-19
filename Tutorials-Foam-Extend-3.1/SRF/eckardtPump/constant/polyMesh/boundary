@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     3.1                                |
+|   \\  /    A nd           | Web:         http://www.extend-project.de       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "1e-06/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+11
+(
+    wall-diffuser-hub
+    {
+        type            wall;
+        nFaces          1312;
+        startFace       584293;
+    }
+    wall-diffuser-shroud
+    {
+        type            wall;
+        nFaces          1312;
+        startFace       585605;
+    }
+    wall-inlet-hub
+    {
+        type            wall;
+        nFaces          1275;
+        startFace       586917;
+    }
+    wall-inlet-shroud
+    {
+        type            wall;
+        nFaces          1275;
+        startFace       588192;
+    }
+    wall-hub
+    {
+        type            wall;
+        nFaces          2400;
+        startFace       589467;
+    }
+    wall-shroud
+    {
+        type            wall;
+        nFaces          2400;
+        startFace       591867;
+    }
+    wall-blade
+    {
+        type            wall;
+        nFaces          5280;
+        startFace       594267;
+    }
+    inlet
+    {
+        type            patch;
+        nFaces          2040;
+        startFace       599547;
+    }
+    outlet
+    {
+        type            patch;
+        nFaces          1640;
+        startFace       601587;
+    }
+    rotor_cyclic_lower
+    {
+        type            cyclicGgi;
+        nFaces          4680;
+        startFace       603227;
+        shadowPatch     rotor_cyclic_upper;
+        zone            rotor_cyclic_lower_faces;
+        bridgeOverlap   false;
+        rotationAxis    (0 0 1);
+        rotationAngle   -18;
+        separationOffset (0 0 0);
+    }
+    rotor_cyclic_upper
+    {
+        type            cyclicGgi;
+        nFaces          4680;
+        startFace       607907;
+        shadowPatch     rotor_cyclic_lower;
+        zone            rotor_cyclic_upper_faces;
+        bridgeOverlap   false;
+        rotationAxis    (0 0 1);
+        rotationAngle   18;
+        separationOffset (0 0 0);
+    }
+)
+
+// ************************************************************************* //

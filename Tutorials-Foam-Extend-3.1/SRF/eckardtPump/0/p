@@ -1,0 +1,75 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      p;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [1 -1 -2 0 0 0 0];
+
+internalField   uniform 101325;
+
+boundaryField
+{
+    inlet
+    {
+        type            zeroGradient;
+    }
+
+    outlet
+    {
+	 //type		fixedValue;
+	 //value		uniform 101325;
+
+         type            waveTransmissive;
+         field           p;
+         U               Urel;
+         phi             phi;
+         rho             rho;
+         psi             psi;
+         gamma           1.4;
+         fieldInf        101325;
+         lInf            1;
+         inletOutlet     off;
+         correctSupercritical off;
+         value           uniform 101325;
+
+/*        type            rotatingTotalPressure;
+        p0              $internalField;
+        U               Urel;
+        phi             phi;
+        rho             none;
+        psi             psi;
+        gamma           1;
+        value           uniform 101325;
+        omega		(0 0 1466.1);*/
+    }
+
+    "(wall-diffuser-shroud|wall-inlet-shroud|wall-shroud)"
+    {
+        type            zeroGradient;
+    }
+    
+    "(wall-diffuser-hub|wall-inlet-hub|wall-hub|wall-blade)"
+    {
+        type            zeroGradient;
+    }
+
+    "(rotor_cyclic_upper|rotor_cyclic_lower)"
+    {
+        type            cyclicGgi;
+    }
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,163 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Application
+    pisoCentralFoam
+
+Description
+    Pressure-based semi implicit compressible flow solver based on central-upwind schemes of
+    Kurganov and Tadmor
+
+\*---------------------------------------------------------------------------*/
+
+#include "fvCFD.H"
+#include "psiThermo.H"
+#include "pimpleControl.H"
+#include "turbulentFluidThermoModel.H"
+#include "zeroGradientFvPatchFields.H"
+#include "coupledFvsPatchFields.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
+#include "cellQuality.H"
+#include "fvOptions.H"
+#include "SRFModel.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+int main(int argc, char *argv[])
+{
+    #include "setRootCase.H"
+
+    #include "createTime.H"
+    #include "createMesh.H"
+
+    pimpleControl pimple(mesh);
+
+    #include "createTimeControls.H"
+    #include "createRDeltaT.H"
+    #include "createFields.H"
+    #include "createFvOptions.H"
+    #include "createMRF.H"
+    #include "initContinuityErrs.H"
+    #include "readCourantType.H"
+
+    dimensionedScalar v_zero("v_zero", dimVolume/dimTime, 0.0);
+
+    #include "createSurfaceFields.H"
+    #include "markBadQualityCells.H"
+
+    if (!LTS)
+    {
+        #include "compressibleCourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
+
+    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+    Info<< "\nStarting time loop\n" << endl;
+
+    #include "initKappaField.H"
+
+    while (runTime.run())
+    {
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "acousticCourantNo.H"
+            #include "compressibleCourantNo.H"
+            #include "readTimeControls.H"
+            #include "setDeltaT.H"
+        }
+
+        runTime++;
+
+        psi.oldTime();
+        rho.oldTime();
+        p.oldTime();
+        Urel.oldTime();
+        h.oldTime();
+        i.oldTime();
+
+        Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        // --- Solve density
+        {
+            fvScalarMatrix rhoEqn
+            (
+                fvm::ddt(rho) + fvc::div(phi)
+                ==
+                fvOptions(rho)
+            );
+
+            fvOptions.constrain(rhoEqn);
+
+            rhoEqn.solve();
+
+            fvOptions.correct(rho);
+
+            Info<< "rho max/min : " << max(rho).value()
+            << " / " << min(rho).value() << endl;
+        }
+
+
+        // --- Solve momentum
+        #include "UrelEqn.H"
+
+        // --- Solve energy
+        #include "iEqn.H"
+
+        // --- Solve pressure (PISO)
+        {
+            while (pimple.correct())
+            {
+                #include "pEqn.H"
+            }
+
+            #define PISOCENTRALFOAM_LTS
+            #include "updateKappa.H"
+        }
+
+        // --- Solve turbulence
+        turbulence->correct();
+
+        U = Urel + SRF->U();
+
+        dissip = fvc::div( ((-turbulence->devRhoReff()) & Urel) );
+        dpdt = fvc::ddt(p);
+
+        runTime.write();
+
+        Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
+            << "  ClockTime = " << runTime.elapsedClockTime() << " s"
+            << nl << endl;
+    }
+
+    Info<< "End\n" << endl;
+
+    return 0;
+}
+
+// ************************************************************************* //

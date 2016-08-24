@@ -1,0 +1,15 @@
+The 2D test case for probing rotation-treatment numerical models. The original experimental data were 
+ontained using PIV in a in a 6° diverging rotating channel. The camera was stiffly connected to the
+rotating channel and allowed to measure relative velocities.
+
+
+More information about experiments:
+
+1. Alberto Di Sante, René Van den Braembussche
+"Experimental and Numerical Investigation of the Flow in a Rotating Diverging Channel"
+2. Alberto Di Sante, Javier Gonzalez Castaño, René A. Van den Braembussche
+"Time Resolved PIV in a Rotating Diverging Channel"
+
+
+
+

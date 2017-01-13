@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     3.1                                |
+|   \\  /    A nd           | Web:         http://www.extend-project.de       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      Urel;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 3 0);
+
+boundaryField
+{
+    inlet
+    {
+/*	type		swirlFlowRateInletVelocity;
+	flowRate	constant 0.018675;
+	rpm		constant 60;	
+	value           uniform (0 3 0);*/
+
+/*        type            flowRateInletVelocity;
+        value           uniform (0 3 0); //flowRate is 0.42kg/s
+        flowRate	0.018675;*/
+
+        type            SRFVelocity;
+        inletValue      uniform (0 3 0);
+        relative        yes;
+        value           uniform (0 3 0);
+    }
+
+    outlet
+    {
+        type           inletOutlet;
+        inletValue     uniform (0 0 0);
+    }
+
+    walls
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    topAndBottom
+	{	
+		type	empty;
+	}
+}
+
+// ************************************************************************* //

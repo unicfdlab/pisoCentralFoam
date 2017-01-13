@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.3.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    rho
+    {
+        solver          diagonal;
+    }
+    
+    Urel
+    {
+        solver          PBiCG;
+        preconditioner	DILU;
+        tolerance       1e-09;
+        relTol          0.0;
+    }
+    
+    p
+    {
+        solver          PBiCG;
+        preconditioner	DILU;
+        tolerance       1e-09;
+        relTol          0.0;
+    }
+
+    "(Hr|Er|h|i|k|epsilon)"
+    {
+        $Urel;
+    }
+}
+
+PISO
+{
+    momentumPredictor	true;
+    nNonOrthogonalCorrectors 1;
+    nCorrectors		2;
+    nonOrthogonalityThreshold	60.0;
+    skewnessThreshold		1.0;
+}
+
+relaxationFactors
+{
+    // Note: under-relaxation factors used in wave-transmissive schemes
+    p               0.3;
+    Urel            0.7;
+    k               0.7;
+    epsilon         0.7;
+    omega           0.7;
+    R               0.7;
+    nuTilda         0.7;
+}
+
+fieldBounds
+{
+    // With bounding
+    p      2e4    1e6;
+    T      200    500;
+    Urel   500;
+}
+
+// ************************************************************************* //

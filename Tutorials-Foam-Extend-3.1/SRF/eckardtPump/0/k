@@ -1,0 +1,90 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | foam-extend: Open Source CFD                    |
+|  \\    /   O peration     | Version:     3.1                                |
+|   \\  /    A nd           | Web:         http://www.extend-project.de       |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform 0.3675;
+
+boundaryField
+{
+    wall-diffuser-hub
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-diffuser-shroud
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-inlet-hub
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-inlet-shroud
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-hub
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-shroud
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    wall-blade
+    {
+        type            compressible::kqRWallFunction;
+        value           uniform 0.375;
+        U               Urel;
+    }
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 0.3675;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform 0.3675;
+        value           uniform 0.3675;
+    }
+    rotor_cyclic_lower
+    {
+        type            cyclicGgi;
+        value           uniform 0.3675;
+    }
+    rotor_cyclic_upper
+    {
+        type            cyclicGgi;
+        value           uniform 0.3675;
+    }
+}
+
+
+// ************************************************************************* //
